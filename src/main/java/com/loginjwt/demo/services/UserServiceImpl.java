@@ -1,0 +1,77 @@
+package com.loginjwt.demo.services;
+
+import com.loginjwt.demo.models.ResponseObject;
+import com.loginjwt.demo.models.User;
+import com.loginjwt.demo.repositories.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestBody;
+
+import java.util.List;
+import java.util.Optional;
+
+@Service
+public class UserServiceImpl implements UserService {
+    @Autowired
+    private UserRepository userRepository;
+
+    @Override
+    public Iterable<User> getAllUsers() {
+        return userRepository.findAll();
+    }
+
+    @Override
+    public ResponseEntity<ResponseObject> getUserById(Long id) {
+        Optional<User> user = userRepository.findById(id);
+        if (user.isPresent()) {
+            return ResponseEntity.status(HttpStatus.OK).body(
+                    new ResponseObject("OK", "Successfully", user)
+            );
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                    new ResponseObject("FAILED", "Not found this user")
+            );
+        }
+    }
+
+    @Override
+    public ResponseEntity<ResponseObject> createNewUser(User user) {
+        return ResponseEntity.status(HttpStatus.OK).body(
+          new ResponseObject("OK", "Create successfully", userRepository.save(user))
+        );
+    }
+    @Override
+    public ResponseEntity<ResponseObject> login(User user) {
+        List<User> foundUsers = userRepository.findByUsername(user.getUsername());
+        if (foundUsers.size() == 0)  {
+//            Cannot found user
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                    new ResponseObject("FAILED", "User not found")
+            );
+        } else {
+            User foundUser = foundUsers.get(0);
+            if (foundUser.getPassword().equals(user.getPassword())) {
+//                Password is correct
+                return ResponseEntity.status(HttpStatus.OK).body(
+                        new ResponseObject("OK", "Login successfully")
+                );
+            } else {
+//                Password is incorrect
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
+                        new ResponseObject("OK", "Incorrect password")
+                );
+            }
+
+        }
+
+
+    }
+
+    @Override
+    public ResponseEntity<ResponseObject> deleteUser(Long id) {
+        return null;
+    }
+}
