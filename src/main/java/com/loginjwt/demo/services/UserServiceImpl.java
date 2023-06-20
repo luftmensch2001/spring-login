@@ -28,11 +28,11 @@ public class UserServiceImpl implements UserService {
         Optional<User> user = userRepository.findById(id);
         if (user.isPresent()) {
             return ResponseEntity.status(HttpStatus.OK).body(
-                    new ResponseObject("OK", "Successfully", user)
+                new ResponseObject("OK", "Successfully", user)
             );
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-                    new ResponseObject("FAILED", "Not found this user")
+                new ResponseObject("FAILED", "Not found this user")
             );
         }
     }
@@ -49,7 +49,7 @@ public class UserServiceImpl implements UserService {
         String encodedPassword = BCrypt.hashpw(user.getPassword(), BCrypt.gensalt(8));
         user.setPassword(encodedPassword);
         return ResponseEntity.status(HttpStatus.OK).body(
-          new ResponseObject("OK", "Create successfully", userRepository.save(user))
+            new ResponseObject("OK", "Create successfully", userRepository.save(user))
         );
     }
 //    Login check
@@ -66,12 +66,12 @@ public class UserServiceImpl implements UserService {
             if (BCrypt.checkpw(user.getPassword(), foundUser.getPassword())) {
 //                Password is correct
                 return ResponseEntity.status(HttpStatus.OK).body(
-                        new ResponseObject("OK", "Login successfully")
+                    new ResponseObject("OK", "Login successfully")
                 );
             } else {
 //                Password is incorrect
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-                        new ResponseObject("FAILED", "Incorrect password")
+                    new ResponseObject("FAILED", "Incorrect password")
                 );
             }
 
