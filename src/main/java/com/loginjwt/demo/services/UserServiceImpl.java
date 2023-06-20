@@ -39,6 +39,13 @@ public class UserServiceImpl implements UserService {
 //    Create new user
     @Override
     public ResponseEntity<ResponseObject> createNewUser(User user) {
+//        Username already existed
+        if (userRepository.findByUsername(user.getUsername()).size() > 0) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(
+                new ResponseObject("FAILED", "Username " + user.getUsername() + " is already existed")
+            );
+        }
+//        Store new user to database
         String encodedPassword = BCrypt.hashpw(user.getPassword(), BCrypt.gensalt(8));
         user.setPassword(encodedPassword);
         return ResponseEntity.status(HttpStatus.OK).body(
