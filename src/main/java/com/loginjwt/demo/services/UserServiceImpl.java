@@ -74,10 +74,7 @@ public class UserServiceImpl implements UserService {
                     new ResponseObject("FAILED", "Incorrect password")
                 );
             }
-
         }
-
-
     }
 //    Delete an user by id
     @Override
