@@ -17,11 +17,12 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private UserRepository userRepository;
 
+//    List all users
     @Override
     public Iterable<User> getAllUsers() {
         return userRepository.findAll();
     }
-
+//    Get user by id
     @Override
     public ResponseEntity<ResponseObject> getUserById(Long id) {
         Optional<User> user = userRepository.findById(id);
@@ -35,7 +36,7 @@ public class UserServiceImpl implements UserService {
             );
         }
     }
-
+//    Create new user
     @Override
     public ResponseEntity<ResponseObject> createNewUser(User user) {
         String encodedPassword = BCrypt.hashpw(user.getPassword(), BCrypt.gensalt(8));
@@ -44,6 +45,7 @@ public class UserServiceImpl implements UserService {
           new ResponseObject("OK", "Create successfully", userRepository.save(user))
         );
     }
+//    Login check
     @Override
     public ResponseEntity<ResponseObject> login(User user) {
         List<User> foundUsers = userRepository.findByUsername(user.getUsername());
@@ -70,6 +72,7 @@ public class UserServiceImpl implements UserService {
 
 
     }
+//    Delete an user by id
     @Override
     public ResponseEntity<ResponseObject> deleteUser(Long id) {
         userRepository.deleteById(id);
