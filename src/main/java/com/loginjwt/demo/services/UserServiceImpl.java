@@ -3,12 +3,11 @@ package com.loginjwt.demo.services;
 import com.loginjwt.demo.models.ResponseObject;
 import com.loginjwt.demo.models.User;
 import com.loginjwt.demo.repositories.UserRepository;
+import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 import java.util.Optional;
@@ -39,6 +38,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public ResponseEntity<ResponseObject> createNewUser(User user) {
+        String encodedPassword = BCrypt.hashpw(user.getPassword(), BCrypt.gensalt(8));
+        user.setPassword(encodedPassword);
         return ResponseEntity.status(HttpStatus.OK).body(
           new ResponseObject("OK", "Create successfully", userRepository.save(user))
         );
@@ -53,7 +54,7 @@ public class UserServiceImpl implements UserService {
             );
         } else {
             User foundUser = foundUsers.get(0);
-            if (foundUser.getPassword().equals(user.getPassword())) {
+            if (BCrypt.checkpw(user.getPassword(), foundUser.getPassword())) {
 //                Password is correct
                 return ResponseEntity.status(HttpStatus.OK).body(
                         new ResponseObject("OK", "Login successfully")
@@ -69,9 +70,11 @@ public class UserServiceImpl implements UserService {
 
 
     }
-
     @Override
     public ResponseEntity<ResponseObject> deleteUser(Long id) {
-        return null;
+        userRepository.deleteById(id);
+        return ResponseEntity.status(HttpStatus.OK).body(
+                new ResponseObject("OK", "Deleted user")
+        );
     }
 }

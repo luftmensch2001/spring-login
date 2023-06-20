@@ -35,5 +35,9 @@ public class UserController {
     public ResponseEntity<ResponseObject> login(@RequestBody User user) {
         return userService.login(user);
     }
-//    @DeleteMapping("/{id}")
+//    Delete an user
+    @DeleteMapping("/{id}")
+    public ResponseEntity<ResponseObject> deleteUser(@PathVariable Long id) {
+        return userService.deleteUser(id);
+    }
 }
