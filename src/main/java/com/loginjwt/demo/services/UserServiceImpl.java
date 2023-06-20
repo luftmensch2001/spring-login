@@ -61,7 +61,7 @@ public class UserServiceImpl implements UserService {
             } else {
 //                Password is incorrect
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-                        new ResponseObject("OK", "Incorrect password")
+                        new ResponseObject("FAILED", "Incorrect password")
                 );
             }
 
