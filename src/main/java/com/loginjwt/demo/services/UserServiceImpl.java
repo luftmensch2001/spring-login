@@ -59,7 +59,7 @@ public class UserServiceImpl implements UserService {
         if (foundUsers.size() == 0)  {
 //            Cannot found user
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-                    new ResponseObject("FAILED", "User not found")
+                new ResponseObject("FAILED", "User not found")
             );
         } else {
             User foundUser = foundUsers.get(0);
