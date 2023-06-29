@@ -1,14 +1,23 @@
 package com.loginjwt.demo.models;
 
 import jakarta.persistence.*;
+import lombok.Data;
+import org.springframework.data.redis.core.RedisHash;
+import org.springframework.data.redis.core.index.Indexed;
 
-@Entity
-@Table(name = "users")
-public class User {
+import java.io.Serializable;
+
+@Data
+@Table(name = "User")
+@RedisHash("User")
+public class User implements Serializable {
     @Id // primary key
+    @Indexed
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Indexed
     private String username;
+    @Indexed
     private String password;
 
     public User(Long id, String username, String password) {

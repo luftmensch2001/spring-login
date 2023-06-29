@@ -5,6 +5,7 @@ import com.loginjwt.demo.models.User;
 import com.loginjwt.demo.repositories.UserRepository;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -25,8 +26,8 @@ public class UserServiceImpl implements UserService {
 //    Get user by id
     @Override
     public ResponseEntity<ResponseObject> getUserById(Long id) {
-        Optional<User> user = userRepository.findById(id);
-        if (user.isPresent()) {
+        User user = userRepository.findById(id);
+        if (user != null) {
             return ResponseEntity.status(HttpStatus.OK).body(
                 new ResponseObject("OK", "Successfully", user)
             );
@@ -40,7 +41,8 @@ public class UserServiceImpl implements UserService {
     @Override
     public ResponseEntity<ResponseObject> createNewUser(User user) {
 //        Username already existed
-        if (userRepository.findByUsername(user.getUsername()).size() > 0) {
+        User foundUser = userRepository.findByUsername(user.getUsername());
+        if (foundUser != null) {
             return ResponseEntity.status(HttpStatus.CONFLICT).body(
                 new ResponseObject("FAILED", "Username " + user.getUsername() + " is already existed")
             );
@@ -55,14 +57,13 @@ public class UserServiceImpl implements UserService {
 //    Login check
     @Override
     public ResponseEntity<ResponseObject> login(User user) {
-        List<User> foundUsers = userRepository.findByUsername(user.getUsername());
-        if (foundUsers.size() == 0)  {
+        User foundUser = userRepository.findByUsername(user.getUsername());
+        if (foundUser == null)  {
 //            Cannot found user
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
                 new ResponseObject("FAILED", "User not found")
             );
         } else {
-            User foundUser = foundUsers.get(0);
             if (BCrypt.checkpw(user.getPassword(), foundUser.getPassword())) {
 //                Password is correct
                 return ResponseEntity.status(HttpStatus.OK).body(
