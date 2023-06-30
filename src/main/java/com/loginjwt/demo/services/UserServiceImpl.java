@@ -5,13 +5,12 @@ import com.loginjwt.demo.models.User;
 import com.loginjwt.demo.repositories.UserRepository;
 import org.mindrot.jbcrypt.BCrypt;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Example;
+import org.springframework.data.util.Pair;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -20,21 +19,17 @@ public class UserServiceImpl implements UserService {
 
 //    List all users
     @Override
-    public Iterable<User> getAllUsers() {
+    public List<User> getAllUsers() {
         return userRepository.findAll();
     }
 //    Get user by id
     @Override
-    public ResponseEntity<ResponseObject> getUserById(Long id) {
+    public Pair<Boolean, Object> getUserById(Long id) {
         User user = userRepository.findById(id);
         if (user != null) {
-            return ResponseEntity.status(HttpStatus.OK).body(
-                new ResponseObject("OK", "Successfully", user)
-            );
+            return Pair.of(true, user);
         } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(
-                new ResponseObject("FAILED", "Not found this user")
-            );
+            return Pair.of(false, "Not found this user");
         }
     }
 //    Create new user
