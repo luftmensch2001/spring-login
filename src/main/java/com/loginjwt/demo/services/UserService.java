@@ -1,16 +1,13 @@
 package com.loginjwt.demo.services;
 
-import com.loginjwt.demo.models.ResponseObject;
 import com.loginjwt.demo.models.User;
-import org.springframework.http.ResponseEntity;
-
-import java.util.Optional;
+import org.springframework.data.util.Pair;
 
 public interface UserService {
     Iterable<User> getAllUsers();
-    ResponseEntity<ResponseObject> getUserById(Long id);
-    ResponseEntity<ResponseObject> createNewUser(User user);
-    ResponseEntity<ResponseObject> login(User user);
-    ResponseEntity<ResponseObject> deleteUser(Long id);
+    Pair<Boolean, Object> getUserById(Long id);
+    Pair<Boolean, Object> createNewUser(User user);
+    Pair<Boolean, Object> login(User user);
+    Pair<Boolean, Object> deleteUser(Long id);
 
 }
