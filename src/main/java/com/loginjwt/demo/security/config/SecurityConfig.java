@@ -30,6 +30,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(auth ->
                         auth.requestMatchers("/users/login/**").permitAll()
                                 .requestMatchers("/users/register/**").permitAll()
+                                .requestMatchers(("/users/delete/**")).hasAuthority("ADMIN")
                                 .anyRequest().authenticated()
                 );
         http.addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);

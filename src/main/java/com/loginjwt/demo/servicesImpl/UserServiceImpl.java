@@ -53,7 +53,7 @@ public class UserServiceImpl implements UserService {
         }
 //        Store new user to database
         user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.setRole(Role.USER);
+        user.setRole(Role.ADMIN);
         userRepository.save(user);
         String token = jwtService.generateToken(user);
         return Pair.of(true, "Token: " + token);

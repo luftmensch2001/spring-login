@@ -14,12 +14,12 @@ public class UserController {
     @Autowired
     private UserService userService;
     //    Get all users
-    @GetMapping
+    @GetMapping("/getAll")
     public ResponseEntity<?> getAllUsers() {
         return ResponseEntity.ok().body(userService.getAllUsers());
     }
     //    Get user by id
-    @GetMapping("/{id}")
+    @GetMapping("/get/{id}")
     public ResponseEntity<?> getUserById(@PathVariable Long id) {
         Pair<Boolean, Object> result = userService.getUserById(id);
         if (result.getFirst()) {
@@ -49,7 +49,7 @@ public class UserController {
         }
     }
     //    Delete an user
-    @DeleteMapping("/{id}")
+    @DeleteMapping("/delete/{id}")
     public ResponseEntity<?> deleteUser(@PathVariable Long id) {
         Pair<Boolean, Object> result = userService.deleteUser(id);
         if (result.getFirst()) {
