@@ -1,5 +1,6 @@
 package com.loginjwt.demo.servicesImpl;
 
+import com.loginjwt.demo.DTO.LoginDTO;
 import com.loginjwt.demo.models.User;
 import com.loginjwt.demo.repositories.UserRepository;
 import com.loginjwt.demo.security.jwt.JwtService;
@@ -60,11 +61,12 @@ public class UserServiceImpl implements UserService {
     }
     //    Login check
     @Override
-    public Pair<Boolean, Object> login(User user) {
+    public Pair<Boolean, LoginDTO> login(User user) {
         Optional<User> foundUser = userRepository.findByUsername(user.getUsername());
+        LoginDTO response = new LoginDTO();
         if (!foundUser.isPresent())  {
 //            Cannot found user
-            return Pair.of(false, "User not found");
+            return Pair.of(false, response);
         } else {
 //            Check authentication
             authenticationManager.authenticate(
@@ -74,7 +76,9 @@ public class UserServiceImpl implements UserService {
                     )
             );
             var jwtToken = jwtService.generateToken(foundUser.get());
-            return Pair.of(true, "Token: " + jwtToken);
+            response.setUser(foundUser.get());
+            response.setAccessToken(jwtToken);
+            return Pair.of(true, response);
         }
     }
     //    Delete an user by id

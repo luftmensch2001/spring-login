@@ -1,5 +1,6 @@
 package com.loginjwt.demo.controllers;
 
+import com.loginjwt.demo.DTO.LoginDTO;
 import com.loginjwt.demo.models.User;
 import com.loginjwt.demo.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,11 +42,11 @@ public class UserController {
     //    Create new user
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody User user) {
-        Pair<Boolean, Object> result = userService.login(user);
+        Pair<Boolean, LoginDTO> result = userService.login(user);
         if (result.getFirst()) {
             return new ResponseEntity<>(result.getSecond(), HttpStatus.OK);
         } else {
-            return new ResponseEntity<>(result.getSecond(), HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(result.getSecond(), HttpStatus.UNAUTHORIZED);
         }
     }
     //    Delete an user
